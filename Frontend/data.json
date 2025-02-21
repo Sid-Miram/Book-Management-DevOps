@@ -1,0 +1,18 @@
+{
+    "members": [
+      { "id": 1, "name": "Alice Johnson" },
+      { "id": 2, "name": "Bob Smith" },
+      { "id": 3, "name": "Charlie Brown" }
+    ],
+    "books": [
+      { "id": 101, "name": "The Great Gatsby", "author": "F. Scott Fitzgerald" },
+      { "id": 102, "name": "To Kill a Mockingbird", "author": "Harper Lee" },
+      { "id": 103, "name": "1984", "author": "George Orwell" }
+    ],
+    "issuances": [
+      { "memberId": 1, "bookId": 101, "issuedDate": "2024-02-01", "targetReturnDate": "2024-02-10", "returned": false },
+      { "memberId": 2, "bookId": 102, "issuedDate": "2024-02-05", "targetReturnDate": "2024-02-15", "returned": true },
+      { "memberId": 3, "bookId": 103, "issuedDate": "2024-02-03", "targetReturnDate": "2024-02-12", "returned": false }
+    ]
+  }
+  
