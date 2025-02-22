@@ -15,9 +15,14 @@ router.post("/", async (req, res) => {
 
 // Get all books
 router.get("/", async (req, res) => {
-  const books = await Book.findAll();
-  res.json(books);
+  try {
+    const books = await Book.findAll(); // Correct for Sequelize
+    res.status(200).json(books);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching books", error: error.message });
+  }
 });
+
 
 // Get a book by ID
 router.get("/:id", async (req, res) => {
@@ -35,5 +40,6 @@ router.put("/:id", async (req, res) => {
   await book.update({ title, author });
   res.json(book);
 });
+
 
 module.exports = router;

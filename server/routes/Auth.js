@@ -1,6 +1,7 @@
 const express = require('express');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const { userModel } = require('../models/user');
 const cookieParser = require('cookie-parser'); // ✅ Import cookie-parser
 const cors = require('cors'); // ✅ Import CORS
@@ -8,6 +9,7 @@ require('dotenv').config();
 const OAuth2Strategy = require("passport-google-oauth2").Strategy;
 
 const auth = express();
+
 
 // ✅ Middleware Fixes
 auth.use(express.json());
@@ -17,7 +19,7 @@ auth.use(cors({
     credentials: true // ✅ Allow cookies in CORS
 }));
 
-// Google OAuth Strategy
+
 passport.use(new OAuth2Strategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
@@ -117,4 +119,14 @@ auth.get('/logout', (req, res) => {
     res.redirect('/');
 });
 
+//get all users
+auth.get('/allUsers', async (req, res) => {
+    try {
+        const users = await userModel.find();
+        res.status(200).json({users});
+    } catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+});
 module.exports = auth;
