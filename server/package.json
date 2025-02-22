@@ -33,6 +33,7 @@
     "passport-local": "^1.0.0",
     "pg": "^8.13.3",
     "razorpay": "^2.9.2",
+    "react-circular-progressbar": "^2.1.0",
     "sequelize": "^6.37.5",
     "socket.io": "^4.7.5",
     "supertest": "^7.0.0"
