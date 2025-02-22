@@ -1,14 +1,12 @@
-const { Sequelize } = require("sequelize");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASS,
-  {
-    host: process.env.DB_HOST,
-    dialect: process.env.DB_DIALECT,
-  }
-);
+const DB_NAME = "LIbrary_Managment"; // Database name
+URI  = process.env.MONGO_URI;
+const connectMongoDB = async () => {
 
-module.exports = sequelize;
+  mongoose.connect(URI, { dbName: "LIbrary_Managment" })
+  .then(() => console.log("Connection successful"))
+};
+
+module.exports = connectMongoDB;
