@@ -88,7 +88,63 @@ auth.get('/auth/google/callback', passport.authenticate('google', { session: fal
     }
 );
 
-// ✅ FIX: Extract JWT correctly
+// ✅ POST Route: Manually Register a User
+auth.post('/login', async (req, res) => {
+    try {
+        console.log("Incoming Request Body:", req.body); // ✅ Debugging
+
+        const { name, username, ownerImg, role } = req.body;
+
+        if (!name || !username) {
+            console.log("Validation Error: Name and username are required.");
+            return res.status(400).json({ message: "Name and email are required" });
+        }
+
+        // Check if user already exists
+        let user = await userModel.findOne({ username });
+
+        if (user) {
+            console.log("User already exists in DB:", user);
+            return res.status(400).json({ message: "User already exists" });
+        }
+
+        // Create a new user
+        console.log("Creating new user...");
+        user = new userModel({
+            name,
+            username,
+            ownerImg: ownerImg || [],
+            role: role || 'user'
+        });
+
+        console.log("User object before saving:", user);
+
+        await user.save();
+
+        console.log("User successfully saved to DB:", user);
+
+        // Generate JWT Token
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+        // Set HTTP-Only Cookie
+        res.cookie("jwt", token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
+        console.log("User registered successfully and JWT token set.");
+
+        res.status(201).json({ message: "User registered successfully", user });
+
+    } catch (error) {
+        console.error("Error in /login route:", error);
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+});
+
+// ✅ Get User Info Route
+
 auth.get('/user', async (req, res) => {
     try {
 
