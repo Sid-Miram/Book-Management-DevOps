@@ -63,15 +63,6 @@ app.put('/:id', async (req, res) => {
   }
 });
 
-// Get all members
-app.get('/members', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM member');
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
 
 // Get books not borrowed
 app.get('/not-borrowed', async (req, res) => {

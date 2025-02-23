@@ -1,0 +1,22 @@
+meta {
+  name: book insert data
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://localhost:4000/book/books
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "book_id": 1,
+      "book_name": "The Catcher in the Rye",
+      "book_cat_id": 1,
+      "book_collection_id": 101,
+      "book_launch_date": "1951-07-16",
+      "book_publisher": "Little, Brown and Company"
+  }
+}
