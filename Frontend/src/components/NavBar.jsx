@@ -43,7 +43,7 @@ const Navbar = () => {
               className="p-2 rounded-md bg-gray-800 hover:bg-gray-700 transition duration-300"
               title="Issue a Book"
             >
-              <img src = "./test2.png" alt = "Book Issuer Icon" className="h-6 w-6 text-gray-300" />
+              <img src = "./test2.png" className="h-6 w-6 text-gray-300" />
             </button>
           </div>
         </div>
