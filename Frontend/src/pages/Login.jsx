@@ -6,13 +6,13 @@ const GoogleLogin = () => {
 
   // Google Login Redirect
   const handleGoogleLogin = () => {
-    window.open("http://localhost:4000/auth/google", "_self");
+    window.open("http://localhost:6000/auth/google", "_self");
   };
 
   // Fetch User Info from /user Route
   const fetchUserInfo = async () => {
     try {
-      const response = await fetch("http://localhost:4000/user", {
+      const response = await fetch("http://localhost:6000/user", {
         method: "GET",
         credentials: "include", // ✅ Include credentials for cookies
       });

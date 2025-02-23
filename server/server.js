@@ -7,16 +7,13 @@ const BookRoutes = require("./routes/bookRoutes"); // Uses SQL
 // const issuanceRoutes = require("./routes/issuanceRoutes"); // Uses SQL
 
 const User = require("./routes/Auth")
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 4000;
 const app = express();
 app.use(express.json());
 
 const allowedOrigins = [
   "http://localhost:4500",
-  "http://localhost:4000",
-  "https://e-commerce-capstone.onrender.com",
-  "http://e-commerce-capstone.onrender.com",
-  "https://scale-mart1.vercel.app",
+  "http://localhost:6000"
 ];
 
 const corsOptions = {

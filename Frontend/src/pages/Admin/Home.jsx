@@ -7,7 +7,8 @@ import { motion } from 'framer-motion';
 
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import dataJson from '../data.json';
+import dataJson from '../../data.json';
+import './style.css'
 
 function Home() {
     const [totalBooks, setTotalBooks] = useState(0);

@@ -3,7 +3,7 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { userModel } = require('../models/user');
-const cookieParser = require('cookie-parser'); // ✅ Import cookie-parser
+// const cookieParser = require('cookie-parser'); // ✅ Import cookie-parser
 const cors = require('cors'); // ✅ Import CORS
 require('dotenv').config();
 const OAuth2Strategy = require("passport-google-oauth2").Strategy;
