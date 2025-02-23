@@ -1,13 +1,13 @@
 const express = require("express");
 require("dotenv").config();
 const cors = require("cors");
-const connectMongoDB = require("./config/database"); 
+const connectMongoDB = require("./config/database");
 // const memberRoutes = require("./routes/memberRoutes"); // Uses MongoDB
-// const bookRoutes = require("./routes/bookRoutes"); // Uses SQL
+const BookRoutes = require("./routes/bookRoutes"); // Uses SQL
 // const issuanceRoutes = require("./routes/issuanceRoutes"); // Uses SQL
 
-const User  = require("./routes/Auth")
-const PORT = process.env.PORT || 4000;
+const User = require("./routes/Auth")
+const PORT = process.env.PORT || 6000;
 const app = express();
 app.use(express.json());
 
@@ -34,8 +34,8 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-app.use(cors(corsOptions));
-app.options("*", cors(corsOptions));
+// app.use(cors(corsOptions));
+// app.options("*", cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,6 +45,8 @@ connectMongoDB();
 
 
 app.use('/', User);
+
+app.use('/books', BookRoutes)
 
 
 // // Routes

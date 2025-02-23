@@ -107,7 +107,7 @@ auth.post('/login', async (req, res) => {
         user = new userModel({
             name,
             username,
-            ownerImg: ownerImg || [], 
+            ownerImg: ownerImg || [],
             role: role || 'user'
         });
 
