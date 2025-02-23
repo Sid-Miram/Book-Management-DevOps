@@ -1,52 +1,90 @@
 const express = require("express");
 const router = express.Router();
-const Issuance = require("../models/Issuance");
-const Member = require("../models/Member");
-const Book = require("../models/Book");
+const { pool } = require("../db"); // Assuming you have a database connection setup
 
-// Issue a book to a member
-router.post("/", async (req, res) => {
+// 📌 Issue a book
+router.post("/issue", async (req, res) => {
   try {
-    const { memberId, bookId, issueDate, returnDate } = req.body;
+    const { book_id, issuance_member, issued_by, target_return_date, issuance_status } = req.body;
 
-    const member = await Member.findByPk(memberId);
-    const book = await Book.findByPk(bookId);
-    if (!member || !book) {
-      return res.status(404).json({ error: "Member or Book not found" });
-    }
+    const result = await pool.query(
+      `INSERT INTO issuance (book_id, issuance_member, issued_by, target_return_date, issuance_status) 
+             VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [book_id, issuance_member, issued_by, target_return_date, issuance_status]
+    );
 
-    if (!book.available) {
-      return res.status(400).json({ error: "Book is already issued" });
-    }
-
-    const issuance = await Issuance.create({ MemberId: memberId, BookId: bookId, issueDate, returnDate });
-    await book.update({ available: false });
-
-    res.status(201).json(issuance);
+    res.status(201).json({ message: "Book issued successfully", issuance: result.rows[0] });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("Error issuing book:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// Get all issued books
+// 📌 Get all issuance records
 router.get("/", async (req, res) => {
-  const issuances = await Issuance.findAll({ include: [Member, Book] });
-  res.json(issuances);
+  try {
+    const result = await pool.query("SELECT * FROM issuance");
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("Error fetching issuance records:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
-// Return a book
+// 📌 Get issuance record by ID
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query("SELECT * FROM issuance WHERE issuance_id = $1", [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Issuance record not found" });
+    }
+
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error("Error fetching issuance record:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// 📌 Update issuance status
 router.put("/:id", async (req, res) => {
   try {
-    const issuance = await Issuance.findByPk(req.params.id);
-    if (!issuance) return res.status(404).json({ error: "Issuance record not found" });
+    const { id } = req.params;
+    const { issuance_status } = req.body;
 
-    const book = await Book.findByPk(issuance.BookId);
-    await issuance.update({ returnDate: new Date() });
-    await book.update({ available: true });
+    const result = await pool.query(
+      "UPDATE issuance SET issuance_status = $1 WHERE issuance_id = $2 RETURNING *",
+      [issuance_status, id]
+    );
 
-    res.json({ message: "Book returned successfully" });
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Issuance record not found" });
+    }
+
+    res.status(200).json({ message: "Issuance status updated", issuance: result.rows[0] });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("Error updating issuance status:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// 📌 Delete issuance record
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await pool.query("DELETE FROM issuance WHERE issuance_id = $1 RETURNING *", [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Issuance record not found" });
+    }
+
+    res.status(200).json({ message: "Issuance record deleted" });
+  } catch (error) {
+    console.error("Error deleting issuance record:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
