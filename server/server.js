@@ -55,3 +55,4 @@ app.use('/books', BookRoutes)
 // app.use("/issuance", issuanceRoutes); // Issuance records stored in SQL
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+module.exports = app;
